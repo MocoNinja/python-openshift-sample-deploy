@@ -1,2 +1,116 @@
-NAME           REVISION   DESIRED   CURRENT   TRIGGERED BY
-hello-python   3          1         1         config,image(pythontest:latest)
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  creationTimestamp: 2020-01-13T19:18:53Z
+  generation: 4
+  name: hello-python
+  namespace: myproject
+  resourceVersion: "21371"
+  selfLink: /apis/apps.openshift.io/v1/namespaces/myproject/deploymentconfigs/hello-python
+  uid: 8946d466-3639-11ea-aaf7-080027f5b2e6
+spec:
+  replicas: 1
+  selector:
+    name: hello-python
+  strategy:
+    activeDeadlineSeconds: 21600
+    resources: {}
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Rolling
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        name: hello-python
+    spec:
+      containers:
+      - env:
+        - name: host
+          valueFrom:
+            configMapKeyRef:
+              key: HOST
+              name: database
+        - name: port
+          valueFrom:
+            configMapKeyRef:
+              key: PORT
+              name: database
+        - name: db
+          valueFrom:
+            configMapKeyRef:
+              key: DB
+              name: database
+        - name: user
+          valueFrom:
+            secretKeyRef:
+              key: user
+              name: database-secret
+        - name: pass
+          valueFrom:
+            secretKeyRef:
+              key: pass
+              name: database-secret
+        image: 172.30.1.1:5000/myproject/pythontest@sha256:78ef213a962cd1def738230584e589c3cce54b1bfa3c57d29dc88b2745d45b60
+        imagePullPolicy: Always
+        name: helloworld
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /data
+          name: volume-p337n
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: fichero
+        name: volume-p337n
+  test: false
+  triggers:
+  - type: ConfigChange
+  - imageChangeParams:
+      automatic: true
+      containerNames:
+      - helloworld
+      from:
+        kind: ImageStreamTag
+        name: pythontest:latest
+        namespace: myproject
+      lastTriggeredImage: 172.30.1.1:5000/myproject/pythontest@sha256:78ef213a962cd1def738230584e589c3cce54b1bfa3c57d29dc88b2745d45b60
+    type: ImageChange
+status:
+  availableReplicas: 0
+  conditions:
+  - lastTransitionTime: 2020-01-13T19:20:53Z
+    lastUpdateTime: 2020-01-13T19:20:53Z
+    message: Deployment config does not have minimum availability.
+    status: "False"
+    type: Available
+  - lastTransitionTime: 2020-01-13T19:22:13Z
+    lastUpdateTime: 2020-01-13T19:22:13Z
+    message: replication controller "hello-python-3" is progressing
+    reason: ReplicationControllerUpdated
+    status: "True"
+    type: Progressing
+  details:
+    causes:
+    - imageTrigger:
+        from:
+          kind: DockerImage
+          name: 172.30.1.1:5000/myproject/pythontest@sha256:78ef213a962cd1def738230584e589c3cce54b1bfa3c57d29dc88b2745d45b60
+      type: ImageChange
+    message: image change
+  latestVersion: 3
+  observedGeneration: 4
+  replicas: 2
+  unavailableReplicas: 2
+  updatedReplicas: 1
