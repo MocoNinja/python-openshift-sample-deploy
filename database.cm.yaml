@@ -1,0 +1,13 @@
+apiVersion: v1
+data:
+  DB: database
+  HOST: database
+  PORT: "5432"
+kind: ConfigMap
+metadata:
+  creationTimestamp: 2020-01-13T18:45:16Z
+  name: database
+  namespace: myproject
+  resourceVersion: "11311"
+  selfLink: /api/v1/namespaces/myproject/configmaps/database
+  uid: d70f5a03-3634-11ea-8aa5-080027f5b2e6

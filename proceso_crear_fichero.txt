@@ -1,0 +1,24 @@
+javier@javiLinux:~/python$ echo "HOLA SOY UN FICHERO" > fichero.txt
+javier@javiLinux:~/python$ oc create configmap fichero --from-file=fichero.txt
+configmap/fichero created
+javier@javiLinux:~/python$ oc get cm
+NAME       DATA      AGE
+database   3         31m
+fichero    1         2s
+javier@javiLinux:~/python$ oc get cm fichero
+NAME      DATA      AGE
+fichero   1         5s
+javier@javiLinux:~/python$ oc get cm fichero -o yaml
+apiVersion: v1
+data:
+  fichero.txt: |
+    HOLA SOY UN FICHERO
+kind: ConfigMap
+metadata:
+  creationTimestamp: 2020-01-13T19:16:20Z
+  name: fichero
+  namespace: myproject
+  resourceVersion: "19656"
+  selfLink: /api/v1/namespaces/myproject/configmaps/fichero
+  uid: 2e359dd8-3639-11ea-8aa5-080027f5b2e6
+javier@javiLinux:~/python$ 

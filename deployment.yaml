@@ -1,0 +1,55 @@
+kind: "DeploymentConfig"
+apiVersion: "v1"
+metadata:
+  name: "hello-python"
+spec:
+  template: 
+    metadata:
+      labels:
+        name: "hello-python"
+    spec:
+      containers:
+        - name: "helloworld"
+          image: "pythontest"
+          env:
+            - name: host
+              valueFrom:
+                configMapKeyRef:
+                  name: database
+                  key: HOST
+            - name: port
+              valueFrom:
+                configMapKeyRef:
+                  name: database
+                  key: PORT
+            - name: db
+              valueFrom:
+                configMapKeyRef:
+                    name: database
+                    key: DB
+            - name: user
+              valueFrom:
+                secretKeyRef:
+                    name: database-secret
+                    key: user
+            - name: pass
+              valueFrom:
+                secretKeyRef:
+                    name: database-secret
+                    key: pass
+  replicas: 1
+  selector:
+    name: "hello-python"
+  triggers:
+    - type: "ConfigChange" 
+    - type: "ImageChange" 
+      imageChangeParams:
+        automatic: true
+        containerNames:
+          - "helloworld"
+        from:
+          kind: "ImageStreamTag"
+          name: "pythontest:latest"
+  strategy: 
+    type: "Rolling"
+

@@ -1,0 +1,12 @@
+apiVersion: v1
+data:
+  fichero.txt: |
+    HOLA SOY UN FICHERO
+kind: ConfigMap
+metadata:
+  creationTimestamp: 2020-01-13T19:16:20Z
+  name: fichero
+  namespace: myproject
+  resourceVersion: "19656"
+  selfLink: /api/v1/namespaces/myproject/configmaps/fichero
+  uid: 2e359dd8-3639-11ea-8aa5-080027f5b2e6
