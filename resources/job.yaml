@@ -1,0 +1,51 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: python-test
+spec:
+  parallelism: 1
+  completions: 1
+  activeDeadlineSeconds: 1800 
+  backoffLimit: 6
+  template:
+    metadata:
+      name: python-test
+    spec:
+      containers:
+      - name: pytest
+        image: moconinja/python-openshift-test:latest
+        volumeMounts:
+        - mountPath: /data
+          name: volume-p337n
+        env:
+        - name: host
+          valueFrom:
+            configMapKeyRef:
+              key: HOST
+              name: database
+        - name: port
+          valueFrom:
+            configMapKeyRef:
+              key: PORT
+              name: database
+        - name: db
+          valueFrom:
+            configMapKeyRef:
+              key: DB
+              name: database
+        - name: user
+          valueFrom:
+            secretKeyRef:
+              key: user
+              name: database-secret
+        - name: pass
+          valueFrom:
+            secretKeyRef:
+              key: pass
+              name: database-secret
+      restartPolicy: OnFailure
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: fichero
+        name: volume-p337n
